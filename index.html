@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compression Algorithm Comparison</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Compression Algorithm Comparison</h1>
+        <p class="subtitle">Compare gzip (fflate), brotli (brotli-wasm), and zlib (pako) compression algorithms</p>
+        <p class="privacy-note">🔒 All processing is done client-side. Your files never leave your browser.</p>
+        
+        <div class="file-input-section">
+            <div class="file-input-wrapper">
+                <input type="file" id="fileInput" multiple accept="*/*">
+                <label for="fileInput" class="file-input-label">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="17,8 12,3 7,8"></polyline>
+                        <line x1="12" y1="3" x2="12" y2="15"></line>
+                    </svg>
+                    Select Files to Compress
+                </label>
+            </div>
+            <div class="file-info" id="fileInfo"></div>
+        </div>
+
+        <div class="controls">
+            <button id="compareBtn" class="compare-btn" disabled>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <polygon points="10,8 16,12 10,16"></polygon>
+                </svg>
+                Compare Compression
+            </button>
+            <button id="clearBtn" class="clear-btn">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="3,6 5,6 21,6"></polyline>
+                    <path d="m19,6v14a2,2 0 0,1 -2,2H7a2,2 0 0,1 -2,-2V6m3,0V4a2,2 0 0,1 2,-2h4a2,2 0 0,1 2,2v2"></path>
+                </svg>
+                Clear Results
+            </button>
+        </div>
+
+        <div class="loading" id="loading" style="display: none;">
+            <div class="loading-spinner"></div>
+            <p>Compressing files...</p>
+        </div>
+
+        <div class="results" id="results" style="display: none;">
+            <h2>Compression & Decompression Results</h2>
+            <div class="results-grid">
+                <div class="algorithm-result" id="gzipResult">
+                    <h3>Gzip (fflate)</h3>
+                    <div class="metrics">
+                        <div class="metric">
+                            <span class="metric-label">Compression Time:</span>
+                            <span class="metric-value" id="gzipCompressionTime">-</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Decompression Time:</span>
+                            <span class="metric-value" id="gzipDecompressionTime">-</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Total Time:</span>
+                            <span class="metric-value" id="gzipTotalTime">-</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Compression Ratio:</span>
+                            <span class="metric-value" id="gzipRatio">-</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Original Size:</span>
+                            <span class="metric-value" id="gzipOriginal">-</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Compressed Size:</span>
+                            <span class="metric-value" id="gzipCompressed">-</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Data Integrity:</span>
+                            <span class="metric-value" id="gzipValidity">-</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="algorithm-result" id="brotliResult">
+                    <h3>Brotli (brotli-wasm)</h3>
+                    <div class="metrics">
+                        <div class="metric">
+                            <span class="metric-label">Compression Time:</span>
+                            <span class="metric-value" id="brotliCompressionTime">-</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Decompression Time:</span>
+                            <span class="metric-value" id="brotliDecompressionTime">-</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Total Time:</span>
+                            <span class="metric-value" id="brotliTotalTime">-</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Compression Ratio:</span>
+                            <span class="metric-value" id="brotliRatio">-</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Original Size:</span>
+                            <span class="metric-value" id="brotliOriginal">-</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Compressed Size:</span>
+                            <span class="metric-value" id="brotliCompressed">-</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Data Integrity:</span>
+                            <span class="metric-value" id="brotliValidity">-</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="algorithm-result" id="zlibResult">
+                    <h3>Zlib (pako)</h3>
+                    <div class="metrics">
+                        <div class="metric">
+                            <span class="metric-label">Compression Time:</span>
+                            <span class="metric-value" id="zlibCompressionTime">-</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Decompression Time:</span>
+                            <span class="metric-value" id="zlibDecompressionTime">-</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Total Time:</span>
+                            <span class="metric-value" id="zlibTotalTime">-</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Compression Ratio:</span>
+                            <span class="metric-value" id="zlibRatio">-</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Original Size:</span>
+                            <span class="metric-value" id="zlibOriginal">-</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Compressed Size:</span>
+                            <span class="metric-value" id="zlibCompressed">-</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Data Integrity:</span>
+                            <span class="metric-value" id="zlibValidity">-</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="summary">
+                <h3>Summary</h3>
+                <div class="summary-content" id="summaryContent">
+                    <!-- Summary will be populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>Built with <a href="https://github.com/101arrowz/fflate" target="_blank">fflate</a>, 
+            <a href="https://github.com/httptoolkit/brotli-wasm" target="_blank">brotli-wasm</a>, 
+            and <a href="https://github.com/nodeca/pako" target="_blank">pako</a></p>
+        </div>
+    </div>
+
+    <script type="module" src="main.js"></script>
+</body>
+</html>
