@@ -7,6 +7,13 @@ algorithms:
 - **Brotli** (using [brotli-wasm](https://github.com/httptoolkit/brotli-wasm))
 - **Zlib** (using [pako](https://github.com/nodeca/pako))
 
+## 🚀 Live Demo
+
+**[Try the demo live on GitHub Pages!](https://iv-stpn.github.io/gzip-brotli-zlib-demo/)**
+
+> All compression testing happens entirely in your browser. No files are
+> uploaded to any server - your data never leaves your device.
+
 ## Features
 
 - 📁 **File Selection**: Upload multiple files of any type for compression
@@ -55,7 +62,56 @@ npm run dev
 
 # Build for production
 npm run build
+
+# Build for GitHub Pages
+npm run build:github
 ```
+
+### GitHub Pages Deployment
+
+This project includes automatic GitHub Pages deployment via GitHub Actions. To
+deploy:
+
+1. **Fork or clone** this repository to your GitHub account
+2. **Enable GitHub Pages** in your repository settings:
+   - Go to Settings → Pages
+   - Source: Deploy from a branch
+   - Branch: Select `gh-pages` (will be created automatically)
+3. **Push to main branch** - deployment happens automatically via GitHub Actions
+4. **Access your demo** at
+   `https://[your-username].github.io/gzip-brotli-zlib-demo/`
+
+The GitHub Actions workflow will automatically:
+
+- Install dependencies
+- Build the project with proper base path
+- Deploy to GitHub Pages
+- Update on every push to main/master branch
+
+#### Manual Deployment (Alternative)
+
+If you prefer manual deployment or want to deploy from your local machine:
+
+```bash
+# Make sure you're on the main branch and have committed your changes
+./deploy.sh
+```
+
+This script will:
+
+- Build the project for production
+- Create or update the `gh-pages` branch
+- Deploy the built files
+- Push to GitHub Pages
+
+#### Custom Domain (Optional)
+
+To use a custom domain with GitHub Pages:
+
+1. Copy `public/CNAME.example` to `public/CNAME`
+2. Replace the content with your domain (e.g., `compression-demo.example.com`)
+3. Configure your domain's DNS to point to GitHub Pages
+4. Commit and push the changes
 
 ### Dependencies
 
